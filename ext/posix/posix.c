@@ -104,12 +104,12 @@ void Init_posix(void) {
     /* Create ::Posix */
     VALUE klass = rb_define_class("Posix", rb_cObject);
 
-    /* Define constants */
+    /* Define constants for sigprocmask */
     rb_define_const(klass, "SIG_BLOCK", INT2FIX(RB_POSIX_SIG_BLOCK));
     rb_define_const(klass, "SIG_UNBLOCK", INT2FIX(RB_POSIX_SIG_UNBLOCK));
     rb_define_const(klass, "SIG_SETMASK", INT2FIX(RB_POSIX_SIG_SETMASK));
 
-    /* Method binding */
+    /* Method binding for sigprocmask */
     rb_define_singleton_method(klass, "sigprocmask", posix_sigprocmask, 2);
     rb_define_singleton_method(klass, "execve", posix_execve, 3);
 }
