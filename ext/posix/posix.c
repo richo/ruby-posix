@@ -100,15 +100,19 @@ VALUE posix_execve(VALUE self, VALUE _binary, VALUE _argv, VALUE _envp) {
     /* Construct our environment. Note that this totally ignores the precedent
      * set by Process#spawn, Kernel#exec and fiends */
 
-    char **envp = malloc(sizeof(char**)*RHASH(_envp)->ntbl->num_entries + 1);
-    envp[0] = NULL;
-
-    keys = rb_hash_keys(_envp);
-    for (i = 0; i < RARRAY_LEN(keys); i++) {
-        akey = RARRAY_PTR(keys)[i];
-        envk = rb_hash_aref(_envp, akey);
-        asprintf(&envp[i], "%s=%s", StringValuePtr(akey), StringValuePtr(envk));
-        envp[i+1] = NULL; /* Ensure that we're null terminated */
+    char **envp;
+    if (RHASH(_envp)->ntbl) {
+        envp = malloc(sizeof(char**)*RHASH(_envp)->ntbl->num_entries + 1);
+        keys = rb_hash_keys(_envp);
+        for (i = 0; i < RARRAY_LEN(keys); i++) {
+            akey = RARRAY_PTR(keys)[i];
+            envk = rb_hash_aref(_envp, akey);
+            asprintf(&envp[i], "%s=%s", StringValuePtr(akey), StringValuePtr(envk));
+            envp[i+1] = NULL; /* Ensure that we're null terminated */
+    }
+    } else {
+        envp = malloc(sizeof(char**));
+        envp[0] = NULL;
     }
 
     execve(binary, argv, envp);
