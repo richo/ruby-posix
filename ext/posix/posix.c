@@ -60,6 +60,19 @@ VALUE posix_sigprocmask(VALUE self, VALUE _how, VALUE _set) {
     }
 }
 
+VALUE posix_dup(VALUE self, VALUE _filedes) {
+    int filedes = FIX2INT(_filedes);
+
+    return INT2FIX(dup(filedes));
+}
+
+VALUE posix_dup2(VALUE self, VALUE _filedes, VALUE _filedes2) {
+    int filedes = FIX2INT(_filedes);
+    int filedes2 = FIX2INT(_filedes2);
+
+    return INT2FIX(dup2(filedes, filedes2));
+}
+
 /* Export an argv that does sane, reasonable things instead of doing weird
  * shit.
  *
@@ -112,6 +125,10 @@ void Init_posix(void) {
     /* Method binding for sigprocmask */
     rb_define_singleton_method(klass, "sigprocmask", posix_sigprocmask, 2);
     rb_define_singleton_method(klass, "execve", posix_execve, 3);
+
+    /* Method binding for dup */
+    rb_define_singleton_method(klass, "dup", posix_dup, 1);
+    rb_define_singleton_method(klass, "dup2", posix_dup2, 2);
 }
 
 
