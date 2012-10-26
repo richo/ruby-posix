@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = "posix"
-  s.version     = "0.0.2"
+  s.version     = "0.0.3"
   s.authors     = ["Richo Healey"]
   s.email       = ["richo@psych0tik.net"]
   s.homepage    = "http://github.com/richo/ruby-posix"
