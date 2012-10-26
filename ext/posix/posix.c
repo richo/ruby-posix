@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 void Init_posix(void);
 static VALUE rb_hash_keys(VALUE hash);
@@ -10,6 +11,21 @@ static VALUE rb_hash_keys(VALUE hash);
 #define RB_POSIX_SIG_BLOCK SIG_BLOCK
 #define RB_POSIX_SIG_UNBLOCK SIG_UNBLOCK
 #define RB_POSIX_SIG_SETMASK SIG_SETMASK
+
+#define RB_POSIX_O_RDONLY O_RDONLY
+#define RB_POSIX_O_WRONLY O_WRONLY
+#define RB_POSIX_O_RDWR O_RDWR
+#define RB_POSIX_O_NONBLOCK O_NONBLOCK
+#define RB_POSIX_O_APPEND O_APPEND
+#define RB_POSIX_O_CREAT O_CREAT
+#define RB_POSIX_O_TRUNC O_TRUNC
+#define RB_POSIX_O_EXCL O_EXCL
+#define RB_POSIX_O_SHLOCK O_SHLOCK
+#define RB_POSIX_O_EXLOCK O_EXLOCK
+#define RB_POSIX_O_NOFOLLOW O_NOFOLLOW
+#define RB_POSIX_O_SYMLINK O_SYMLINK
+#define RB_POSIX_O_EVTONLY O_EVTONLY
+#define RB_POSIX_O_CLOEXEC O_CLOEXEC
 
 int rb_Sigset2sigset_t(VALUE rb_Sigset, sigset_t *sigset) {
     int i;
@@ -100,6 +116,9 @@ VALUE posix_execve(VALUE self, VALUE _binary, VALUE _argv, VALUE _envp) {
     fprintf(stderr, "Error: %s", strerror(errno));
 }
 
+VALUE posix_open(VALUE self, VALUE _path, VALUE _mode) {
+
+
 void Init_posix(void) {
     /* Create ::Posix */
     VALUE klass = rb_define_class("Posix", rb_cObject);
@@ -112,6 +131,25 @@ void Init_posix(void) {
     /* Method binding for sigprocmask */
     rb_define_singleton_method(klass, "sigprocmask", posix_sigprocmask, 2);
     rb_define_singleton_method(klass, "execve", posix_execve, 3);
+
+    /* Define constants for open */
+    rb_define_const(klass, "O_RDONLY", INT2FIX(O_RDONLY));
+    rb_define_const(klass, "O_WRONLY", INT2FIX(O_WRONLY));
+    rb_define_const(klass, "O_RDWR", INT2FIX(O_RDWR));
+    rb_define_const(klass, "O_NONBLOCK", INT2FIX(O_NONBLOCK));
+    rb_define_const(klass, "O_APPEND", INT2FIX(O_APPEND));
+    rb_define_const(klass, "O_CREAT", INT2FIX(O_CREAT));
+    rb_define_const(klass, "O_TRUNC", INT2FIX(O_TRUNC));
+    rb_define_const(klass, "O_EXCL", INT2FIX(O_EXCL));
+    rb_define_const(klass, "O_SHLOCK", INT2FIX(O_SHLOCK));
+    rb_define_const(klass, "O_EXLOCK", INT2FIX(O_EXLOCK));
+    rb_define_const(klass, "O_NOFOLLOW", INT2FIX(O_NOFOLLOW));
+    rb_define_const(klass, "O_SYMLINK", INT2FIX(O_SYMLINK));
+    rb_define_const(klass, "O_EVTONLY", INT2FIX(O_EVTONLY));
+    rb_define_const(klass, "O_CLOEXEC", INT2FIX(O_CLOEXEC));
+
+    /* Method binding for open */
+    rb_define_singleton_method(klass, "open", posix_open, 2);
 }
 
 
