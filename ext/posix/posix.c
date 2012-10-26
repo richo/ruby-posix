@@ -90,6 +90,7 @@ VALUE posix_execve(VALUE self, VALUE _binary, VALUE _argv, VALUE _envp) {
      * the programmer to set ARGV[0] to something
      * reasonable. */
     char** argv = malloc(sizeof(char*)*RARRAY_LEN(_argv) + 1);
+    argv[0] = NULL;
 
     for (i = 0; i < RARRAY_LEN(_argv); i++) {
         argv[i] = StringValuePtr(RARRAY_PTR(_argv)[i]);
@@ -100,6 +101,7 @@ VALUE posix_execve(VALUE self, VALUE _binary, VALUE _argv, VALUE _envp) {
      * set by Process#spawn, Kernel#exec and fiends */
 
     char **envp = malloc(sizeof(char**)*RHASH(_envp)->ntbl->num_entries + 1);
+    envp[0] = NULL;
 
     keys = rb_hash_keys(_envp);
     for (i = 0; i < RARRAY_LEN(keys); i++) {
