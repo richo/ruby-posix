@@ -44,9 +44,6 @@ VALUE posix_sigprocmask(VALUE self, VALUE _how, VALUE _set) {
         rb_Sigset2sigset_t(_set, set);
     }
 
-    sigemptyset(set);
-    sigaddset(set, SIGINT);
-
     if (sigprocmask(how, set, oset) == 0) {
         // TODO Construct a Sigset and return it so that we can interrogate it
 
