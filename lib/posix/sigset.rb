@@ -12,6 +12,7 @@ class Posix
       end
 
       @signals << signal unless include? signal
+      self
     end
 
     def include?(signal)
